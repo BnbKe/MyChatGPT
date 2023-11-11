@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 
 
 # Set your OpenAI API key
-api_key = "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"  # Replace with your OpenAI API key
+api_key = "OPENAI_API_KEY"  # Replace with your OpenAI API key
 openai.api_key = api_key
 
 model = "gpt-4"
