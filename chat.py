@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import datetime
 import os
 import streamlit as st
@@ -17,8 +17,7 @@ from bs4 import BeautifulSoup
 
 
 # Set your OpenAI API key
-api_key = "OPENAI_API_KEY"  # Replace with your OpenAI API key
-openai.api_key = api_key
+client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 model = "gpt-4"
 
@@ -184,15 +183,16 @@ def main():
 
             if st.sidebar.button('Download Data as CSV'):
                 download_csv(df)
+
     user_query = st.text_input("Enter your message or query", key="user_query")
     if user_query:
-        response_obj = openai.Completion.create(
+        completion = client.completions.create(
             model=model_selection,
             prompt=user_query,
             temperature=temperature,
-            max_tokens=150  # Adjust the number of tokens as needed
-    )
-        response = response_obj.choices[0].text.strip()
+            max_tokens=150
+        )
+        response = completion.choices[0].text.strip()
 
         st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
         st.write(response)
