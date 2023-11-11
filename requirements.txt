@@ -1,4 +1,4 @@
-openai==1.2.3
+openai==0.28
 datetime==5.2
 streamlit==1.27.0
 pandas==1.4.2
