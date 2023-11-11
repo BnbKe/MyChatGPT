@@ -1,0 +1,8 @@
+User:
+
+    given tabular data, can you perform data analysis?
+
+Assistant:
+
+    As an AI, I'm capable of guiding you through the process of data analysis, but I can't directly perform data analysis on tabular data. I can help you understand how to clean, analyze, and interpret your data using various statistical and machine learning methods. I can also help you understand how to use various data analysis tools and software such as Excel, Python, R, SQL, and others.
+

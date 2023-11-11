@@ -1,0 +1,13 @@
+openai
+datetime
+os
+streamlit
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+scikit-learn
+base64
+requests
+beautifulsoup4

@@ -1,0 +1,3 @@
+User: how old is earth
+AI: Earth is approximately 4.54 billion years old.
+
