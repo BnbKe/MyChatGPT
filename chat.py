@@ -1,6 +1,6 @@
+from openai import OpenAI
 import datetime
 import os
-from openai import OpenAI
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -183,6 +183,7 @@ def main():
 
             if st.sidebar.button('Download Data as CSV'):
                 download_csv(df)
+
     user_query = st.text_input("Enter your message or query", key="user_query")
     if user_query:
         completion = client.ChatCompletion.create(
