@@ -16,6 +16,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
+
 # Set your OpenAI API key
 client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
@@ -185,18 +186,20 @@ def main():
                 download_csv(df)
 
     user_query = st.text_input("Enter your message or query", key="user_query")
-    if user_query:
-        completion = client.ChatCompletion.create(
-            model=model_selection,
-            messages=[{"role": "user", "content": user_query}]
-        )
-        response = completion.choices[0].text.strip()
+    if user_query:  # Only call OpenAI API if user_query is not empty
+        completion = client.chat.completions.create(
+            model="gpt-4",  # specify GPT-4 model here
+            messages=[
+                {"role": "system", "content": "You are an AI assistant, knowledgeable in various topics and capable of providing detailed explanations."},
+                {"role": "user", "content": user_query}  # Use the user's query
+        ]
+    )
+    response = completion.choices[0].text.strip()
+    st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
+    st.write(response)
 
-        st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
-        st.write(response)
-
-        with open(log_file_path, 'a', encoding='utf-8') as log_file:
-            log_file.write(f"User: {user_query}\nAI: {response}\n\n")
+    with open(log_file_path, 'a', encoding='utf-8') as log_file:
+        log_file.write(f"User: {user_query}\nAI: {response}\n\n")
 
     st.sidebar.title('Typed Query History')
     clear_typed_query_history = st.sidebar.button("Clear Typed Query History")
