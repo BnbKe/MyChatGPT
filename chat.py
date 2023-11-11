@@ -1,4 +1,4 @@
-from openai import OpenAI
+import openai
 import datetime
 import os
 import streamlit as st
@@ -16,9 +16,9 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
 # Set your OpenAI API key
-client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+api_key = "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"  # Replace with your OpenAI API key
+openai.api_key = api_key
 
 model = "gpt-4"
 
@@ -186,28 +186,23 @@ def main():
                 download_csv(df)
 
     user_query = st.text_input("Enter your message or query", key="user_query")
-    completion = None  # Initialize completion to None
+    response_obj = None  # Initialize response_obj to None
+    response = None      # Initialize response to None
 
-    if user_query:  # Conditional check
-        completion = client.chat.completions.create(
-            model="gpt-4",  
-            messages=[
-                {"role": "system", "content": "You are an AI assistant, knowledgeable in various topics and capable of providing detailed explanations."},
-                {"role": "user", "content": user_query}
-            ]
-        )
+    if user_query:
+        response_obj = openai.ChatCompletion.create(
+            model=model_selection,
+            messages=[{"role": "user", "content": user_query}]
+)
+        response = response_obj.choices[0].message['content']
 
-    # Check if completion has been assigned before accessing its attributes
-    if completion:
-        response = completion.choices[0].text.strip()
+    # Write the response if it's available
+    if response:
         st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
         st.write(response)
-    else:
-        # Handle the case where completion is None (e.g., display a message or take some other action)
-        st.write("No response generated.")
 
-    with open(log_file_path, 'a', encoding='utf-8') as log_file:
-        log_file.write(f"User: {user_query}\nAI: {response}\n\n")
+        with open(log_file_path, 'a', encoding='utf-8') as log_file:
+            log_file.write(f"User: {user_query}\nAI: {response}\n\n")
 
     st.sidebar.title('Typed Query History')
     clear_typed_query_history = st.sidebar.button("Clear Typed Query History")
