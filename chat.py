@@ -186,17 +186,25 @@ def main():
                 download_csv(df)
 
     user_query = st.text_input("Enter your message or query", key="user_query")
-    if user_query:  # Only call OpenAI API if user_query is not empty
+    completion = None  # Initialize completion to None
+
+    if user_query:  # Conditional check
         completion = client.chat.completions.create(
-            model="gpt-4",  # specify GPT-4 model here
+            model="gpt-4",  
             messages=[
                 {"role": "system", "content": "You are an AI assistant, knowledgeable in various topics and capable of providing detailed explanations."},
-                {"role": "user", "content": user_query}  # Use the user's query
-        ]
-    )
-    response = completion.choices[0].text.strip()
-    st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
-    st.write(response)
+                {"role": "user", "content": user_query}
+            ]
+        )
+
+    # Check if completion has been assigned before accessing its attributes
+    if completion:
+        response = completion.choices[0].text.strip()
+        st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
+        st.write(response)
+    else:
+        # Handle the case where completion is None (e.g., display a message or take some other action)
+        st.write("No response generated.")
 
     with open(log_file_path, 'a', encoding='utf-8') as log_file:
         log_file.write(f"User: {user_query}\nAI: {response}\n\n")
