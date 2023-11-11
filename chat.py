@@ -184,17 +184,15 @@ def main():
 
             if st.sidebar.button('Download Data as CSV'):
                 download_csv(df)
-
     user_query = st.text_input("Enter your message or query", key="user_query")
     if user_query:
-        response_obj = openai.ChatCompletion.create(
+        response_obj = openai.Completion.create(
             model=model_selection,
-            messages=[
-                {"role": "user", "content": user_query}
-            ],
-            temperature=temperature
-        )
-        response = response_obj.choices[0].message.content
+            prompt=user_query,
+            temperature=temperature,
+            max_tokens=150  # Adjust the number of tokens as needed
+    )
+        response = response_obj.choices[0].text.strip()
 
         st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
         st.write(response)
