@@ -185,26 +185,21 @@ def main():
             if st.sidebar.button('Download Data as CSV'):
                 download_csv(df)
 
+    user_query = st.text_input("Enter your message or query", key="user_query")
+    if user_query:
+        response_obj = openai.ChatCompletion.create(
+            model=model_selection,
+            messages=[
+                {"role": "user", "content": user_query}
+            ],
+            temperature=temperature
+        )
+        response = response_obj.choices[0].message.content
 
-user_query = st.text_input("Enter your message or query", key="user_query")
-response_obj = None  # Initialize response_obj to None
+        st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
+        st.write(response)
 
-if user_query:
-    response_obj = openai.Completion.create(
-        # your parameters here
-    )
-    response = response_obj.choices[0].text.strip()
-# Check if response_obj is not None before trying to access its attributes
-if response_obj:
-    response = response_obj.choices[0].text.strip()
-    st.session_state.typed_query_history.append({"user_query": user_query, "response": response})
-    st.write(response)
-else:
-    # Handle the case where response_obj is None (e.g., display a message or take some other action)
-    st.write("No response received.")
-
-
-    with open(log_file_path, 'a', encoding='utf-8') as log_file:
+        with open(log_file_path, 'a', encoding='utf-8') as log_file:
             log_file.write(f"User: {user_query}\nAI: {response}\n\n")
 
     st.sidebar.title('Typed Query History')
