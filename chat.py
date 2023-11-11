@@ -183,14 +183,11 @@ def main():
 
             if st.sidebar.button('Download Data as CSV'):
                 download_csv(df)
-
     user_query = st.text_input("Enter your message or query", key="user_query")
     if user_query:
-        completion = client.completions.create(
+        completion = client.ChatCompletion.create(
             model=model_selection,
-            prompt=user_query,
-            temperature=temperature,
-            max_tokens=150
+            messages=[{"role": "user", "content": user_query}]
         )
         response = completion.choices[0].text.strip()
 
